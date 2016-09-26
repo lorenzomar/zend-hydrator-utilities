@@ -21,6 +21,16 @@ use Zend\Hydrator\Strategy\StrategyInterface;
 class DateTimeFormatterStrategy implements StrategyInterface
 {
     /**
+     * @var string
+     */
+    private $format;
+
+    /**
+     * @var \DateTimeZone
+     */
+    private $timezone;
+
+    /**
      * @var BaseDateTimeFormatterStrategy
      */
     private $dateTimeFormatter;
@@ -34,10 +44,16 @@ class DateTimeFormatterStrategy implements StrategyInterface
     {
         $this->dateTimeFormatter = new BaseDateTimeFormatterStrategy($format, $timezone);
         $this->useImmutable      = true;
+        $this->format            = $format;
+        $this->timezone          = $timezone;
     }
 
     public function extract($value)
     {
+        if ($value instanceof \DateTimeImmutable) {
+            return $value->format($this->format);
+        }
+
         return $this->dateTimeFormatter->extract($value);
     }
 
