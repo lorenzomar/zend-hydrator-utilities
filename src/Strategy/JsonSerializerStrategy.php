@@ -11,13 +11,13 @@ namespace ZendHydratorUtilities\Strategy;
 use Zend\Hydrator\Strategy\StrategyInterface;
 
 /**
- * Class JsonStrategy.
+ * Class JsonSerializerStrategy.
  *
  * @package ZendHydratorUtilities
  * @package Lorenzo Marzullo <marzullo.lorenzo@gmail.com>
  * @package https://github.com/lorenzomar/zend-hydrator-utilities
  */
-class JsonStrategy implements StrategyInterface
+class JsonSerializerStrategy implements StrategyInterface
 {
     /**
      * @var bool
@@ -37,7 +37,7 @@ class JsonStrategy implements StrategyInterface
 
         return json_encode($value);
     }
-    
+
     public function hydrate($value)
     {
         if (is_null($value)) {
