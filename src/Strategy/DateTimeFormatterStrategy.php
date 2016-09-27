@@ -59,7 +59,7 @@ class DateTimeFormatterStrategy implements StrategyInterface
 
     public function hydrate($value)
     {
-        $e = $this->dateTimeFormatter->extract($value);
+        $e = $this->dateTimeFormatter->hydrate($value);
 
         if ($e instanceof \DateTimeInterface && $this->useImmutable) {
             $e = \DateTimeImmutable::createFromMutable($e);
