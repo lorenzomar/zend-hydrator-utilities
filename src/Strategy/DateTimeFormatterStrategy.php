@@ -40,12 +40,12 @@ class DateTimeFormatterStrategy implements StrategyInterface
      */
     private $useImmutable;
 
-    public function __construct($useImmutable = true, $format = \DateTime::RFC3339, \DateTimeZone $timezone = null)
+    public function __construct($format = \DateTime::RFC3339, \DateTimeZone $timezone = null, $useImmutable = true)
     {
         $this->dateTimeFormatter = new BaseDateTimeFormatterStrategy($format, $timezone);
-        $this->useImmutable      = true;
         $this->format            = $format;
         $this->timezone          = $timezone;
+        $this->useImmutable      = $useImmutable;
     }
 
     public function extract($value)
