@@ -23,11 +23,11 @@ class MyCLabsEnumStrategy implements StrategyInterface
     /**
      * @var string
      */
-    private $enumFqn;
+    private $classFqn;
 
-    public function __construct($enumFqn)
+    public function __construct($classFqn)
     {
-        $this->enumFqn = $enumFqn;
+        $this->classFqn = $classFqn;
     }
 
     /**
@@ -39,7 +39,7 @@ class MyCLabsEnumStrategy implements StrategyInterface
      */
     public function extract($value)
     {
-        if ($value instanceof Enum && get_class($value) === $this->enumFqn) {
+        if ($value instanceof Enum && get_class($value) === $this->classFqn) {
             return (string)$value;
         }
 
@@ -56,7 +56,7 @@ class MyCLabsEnumStrategy implements StrategyInterface
     public function hydrate($value)
     {
         try {
-            return new $this->enumFqn($value);
+            return call_user_func("{$this->classFqn}::$value");
         } catch (\Exception $e) {
             //
         }
