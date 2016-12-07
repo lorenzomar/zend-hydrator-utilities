@@ -16,7 +16,8 @@
         "php": "^5.5 || ^7.0",
         "zendframework/zend-hydrator": "^2.2",
         "ramsey/uuid": "^3.5",
-        "myclabs/php-enum": "^1.4"
+        "myclabs/php-enum": "^1.4",
+        "moneyphp/money": "^3.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.5"
