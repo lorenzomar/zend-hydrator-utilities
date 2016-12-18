@@ -55,6 +55,7 @@ class MyCLabsEnumStrategy implements StrategyInterface
      */
     public function hydrate($value)
     {
+        $value = strtoupper($value);
         try {
             return call_user_func("{$this->classFqn}::$value");
         } catch (\Exception $e) {
