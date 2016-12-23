@@ -26,14 +26,9 @@ class DateTimeFormatterStrategy implements StrategyInterface
     private $format;
 
     /**
-     * @var \DateTimeZone
+     * @var \DateTimeZone|null
      */
     private $timezone;
-
-    /**
-     * @var BaseDateTimeFormatterStrategy
-     */
-    private $dateTimeFormatter;
 
     /**
      * @var bool
@@ -42,29 +37,54 @@ class DateTimeFormatterStrategy implements StrategyInterface
 
     public function __construct($format = \DateTime::RFC3339, \DateTimeZone $timezone = null, $useImmutable = true)
     {
-        $this->dateTimeFormatter = new BaseDateTimeFormatterStrategy($format, $timezone);
-        $this->format            = $format;
-        $this->timezone          = $timezone;
-        $this->useImmutable      = $useImmutable;
+        $this->format       = (string)$format;
+        $this->timezone     = $timezone;
+        $this->useImmutable = $useImmutable;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * Converts to date time string
+     *
+     * @param mixed|\DateTimeInterface $value
+     *
+     * @return mixed|string
+     */
     public function extract($value)
     {
-        if ($value instanceof \DateTimeImmutable) {
+        if ($value instanceof \DateTimeInterface) {
             return $value->format($this->format);
         }
 
-        return $this->dateTimeFormatter->extract($value);
+        return $value;
     }
 
+    /**
+     * Converts date time string to DateTime instance for injecting to object
+     *
+     * {@inheritDoc}
+     *
+     * @param mixed|string $value
+     *
+     * @return mixed|\DateTimeInterface
+     */
     public function hydrate($value)
     {
-        $e = $this->dateTimeFormatter->hydrate($value);
-
-        if ($e instanceof \DateTimeInterface && $this->useImmutable) {
-            $e = \DateTimeImmutable::createFromMutable($e);
+        if ($value === '' || $value === null) {
+            return;
         }
 
-        return $e;
+        if ($this->timezone) {
+            $hydrated = $this->useImmutable ?
+                \DateTimeImmutable::createFromFormat($this->format, $value, $this->timezone) :
+                \DateTime::createFromFormat($this->format, $value, $this->timezone);
+        } else {
+            $hydrated = $this->useImmutable ?
+                \DateTimeImmutable::createFromFormat($this->format, $value) :
+                \DateTime::createFromFormat($this->format, $value);
+        }
+
+        return $hydrated ?: $value;
     }
 }
