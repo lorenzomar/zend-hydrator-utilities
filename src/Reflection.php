@@ -8,7 +8,9 @@
 
 namespace ZendHydratorUtilities;
 
+use Zend\Hydrator\NamingStrategy\NamingStrategyInterface;
 use Zend\Hydrator\Reflection as BaseReflection;
+use Zend\Hydrator\Strategy\StrategyInterface;
 
 /**
  * Class Reflection.
@@ -19,6 +21,21 @@ use Zend\Hydrator\Reflection as BaseReflection;
  */
 class Reflection extends BaseReflection
 {
+    public function __construct(NamingStrategyInterface $namingStrategy = null, array $strategies = [])
+    {
+        parent::__construct();
+
+        if ($namingStrategy !== null) {
+            $this->setNamingStrategy($namingStrategy);
+        }
+
+        foreach ($strategies as $name => $strategy) {
+            if ($strategy instanceof StrategyInterface) {
+                $this->addStrategy($name, $strategy);
+            }
+        }
+    }
+
     /**
      * @inheritdoc
      *
