@@ -41,15 +41,17 @@ class Reflection extends BaseReflection
      *
      * @return object
      */
-    public function hydrate(array $data, $className)
+    public function hydrate(array $data, $classNameOrObject)
     {
-        $object = $this->buildObject($className);
+        $object = $this->buildObject($classNameOrObject);
 
         return parent::hydrate($data, $object);
     }
 
-    protected function buildObject($className)
+    protected function buildObject($classNameOrObject)
     {
-        return unserialize(sprintf('O:%d:"%s":0:{}', strlen($className), $className));
+        return is_object($classNameOrObject) ?
+            $classNameOrObject :
+            unserialize(sprintf('O:%d:"%s":0:{}', strlen($classNameOrObject), $classNameOrObject));
     }
 }
